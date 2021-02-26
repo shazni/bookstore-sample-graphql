@@ -1,0 +1,99 @@
+type BookType {
+  id: ID!
+  title: String!
+  author: String!
+  description: String!
+  publisherBookUrl: String!
+  releasedOn: DateTime!
+  postedUser: UserType
+}
+
+type CreateBook {
+  book: BookType
+}
+
+type CreateUser {
+  user: UserType
+}
+
+"""
+The `DateTime` scalar type represents a DateTime
+value as specified by
+[iso8601](https://en.wikipedia.org/wiki/ISO_8601).
+"""
+scalar DateTime
+
+type DeleteBook {
+  bookId: Int
+}
+
+"""
+The `GenericScalar` scalar type represents a generic
+GraphQL scalar value that could be:
+String, Boolean, Int, Float, List or Object.
+"""
+scalar GenericScalar
+
+type Mutation {
+  createBook(author: String, description: String, publisherBookUrl: String, title: String): CreateBook
+  updateBook(author: String, bookId: Int!, description: String, publisherBookUrl: String, title: String): UpdateBook
+  deleteBook(bookId: Int!): DeleteBook
+  createUser(email: String!, password: String!, username: String!): CreateUser
+
+  """Obtain JSON Web Token mutation"""
+  tokenAuth(username: String!, password: String!): ObtainJSONWebToken
+  verifyToken(token: String!): Verify
+  refreshToken(token: String!): Refresh
+}
+
+"""Obtain JSON Web Token mutation"""
+type ObtainJSONWebToken {
+  token: String
+}
+
+type Query {
+  books(search: String): [BookType]
+  user(id: Int!): UserType
+  selfUser: UserType
+}
+
+type Refresh {
+  token: String
+  payload: GenericScalar
+}
+
+type UpdateBook {
+  book: BookType
+}
+
+type UserType {
+  id: ID!
+  password: String!
+  lastLogin: DateTime
+
+  """
+  Designates that this user has all permissions without explicitly assigning them.
+  """
+  isSuperuser: Boolean!
+
+  """Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only."""
+  username: String!
+  firstName: String!
+  lastName: String!
+  email: String!
+
+  """Designates whether the user can log into this admin site."""
+  isStaff: Boolean!
+
+  """
+  Designates whether this user should be treated as active. Unselect this instead of deleting accounts.
+  """
+  isActive: Boolean!
+  dateJoined: DateTime!
+  bookSet: [BookType!]!
+}
+
+type Verify {
+  payload: GenericScalar
+}
+
